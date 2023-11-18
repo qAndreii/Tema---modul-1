@@ -1,0 +1,30 @@
+import requests
+from bs4 import BeautifulSoup
+
+def get_page_info(url):
+    # obtine titlul paginii
+    response = requests.get(url)
+    
+    # verificare
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # extrage titlul paginii
+        title = soup.title.string if soup.title else "Nu exista titlu"
+        
+        # extrage descrierea meta
+        meta_description = soup.find('meta', attrs={'name': 'description'})
+        description = meta_description.get('content') if meta_description else "Nu exista descriere meta"
+        
+        # printeaza titlu si descriere
+        print(f'Titlu: {title}')
+        print(f'Descriere: {description}')
+    else:
+        print(f'Eroare {response.status_code}: Pagina nu a putut fi accesata')
+
+if __name__ == "__main__":
+    # introducere url
+    url = input("Introduceti URL-ul paginii: ")
+    
+    # apel functie
+    get_page_info(url)
